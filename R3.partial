@@ -1,0 +1,21 @@
+configure t
+int e0/1
+ip add 33.33.33.2 255.255.255.252
+no shut
+exit
+int e0/2
+ip add 10.10.10.1 255.255.255.252
+no shut
+exit
+int loopback 0
+ip add 3.3.3.3 255.255.255.255
+exit
+
+router eigrp 150
+network 33.33.33.0 255.255.255.252
+exit
+
+router bgp 400
+neighbor 10.10.10.2 remote-as 500
+network 33.33.33.4 mask 255.255.255.252
+exit

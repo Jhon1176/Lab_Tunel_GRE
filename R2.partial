@@ -1,0 +1,22 @@
+configure t
+int e0/1
+ip add 33.33.33.6 255.255.255.252
+no shut
+exit
+int e0/2
+ip add 33.33.33.1 255.255.255.252
+no shut
+exit
+int loopback 0
+ip add 2.2.2.2 255.255.255.255
+exit'
+
+router eigrp 150
+network 33.33.33.4 255.255.255.252
+network 33.33.33.0 255.255.255.252
+exit
+
+ip route 20.20.20.4 255.255.255.252 33.33.33.2
+
+router eigrp 150
+redistribute static

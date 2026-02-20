@@ -1,0 +1,41 @@
+configure t
+int e0/1
+ip add 20.20.20.6 255.255.255.252
+no shut
+ip ospf 10 area 0
+exit
+int e0/2
+ip add 192.168.0.1 255.255.255.0
+no shut
+exit
+int loopback 0
+ip add 7.7.7.7 255.255.255.255
+exit
+
+crypto isakmp policy 10
+encryption aes 256
+hash sha256
+authentication pre-share
+group 14
+lifetime 3600
+exit
+crypto isakmp key espoch2026 address 33.33.33.5 
+crypto ipsec transform-set VPN esp-aes 256 esp-sha256-hmac 
+mode tunnel
+exit
+crypto ipsec profile GRE
+set transform-set VPN 
+exit
+
+int tunnel 1
+ip add 12.12.12.2 255.255.255.252
+ip mtu 1400
+tunnel source e0/1
+tunnel destination 33.33.33.5
+tunnel protection ipsec profile GRE
+exit
+
+router eigrp 500
+network 12.12.12.0 255.255.255.252
+network 192.168.0.0 255.255.255.0
+exit

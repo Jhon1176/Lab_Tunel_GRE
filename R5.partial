@@ -1,0 +1,17 @@
+configure t
+int e0/1
+ip add 10.10.10.6 255.255.255.252
+no shut
+exit
+int e0/2
+ip add 20.20.20.1 255.255.255.252
+ip ospf 10 area 0
+no shut
+exit
+int loopback 0
+ip add 5.5.5.5 255.255.255.255
+exit
+router bgp 600
+neighbor 10.10.10.5 remote-as 500
+network 20.20.20.4 mask 255.255.255.252
+exit

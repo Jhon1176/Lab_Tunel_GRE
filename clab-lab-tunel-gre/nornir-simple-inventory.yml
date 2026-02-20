@@ -1,0 +1,46 @@
+---
+router1:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.2
+router2:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.3
+router3:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.4
+router4:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.5
+router5:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.6
+router6:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.7
+router7:
+    username: admin
+    password: admin
+    platform: cisco_iol
+    hostname: 172.20.20.8
+PC1:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.9
+PC2:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.10
