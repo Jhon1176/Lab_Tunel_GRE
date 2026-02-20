@@ -1,43 +1,48 @@
-# Implementación de Túnel GRE sobre IPsec VPN (Simulación)
+# Interconexión Segura: Túnel GRE sobre IPsec VPN (Cisco IOL)
 
-Este proyecto presenta un escenario avanzado de red diseñado en **Containerlab**, enfocado en la interconexión segura de sitios remotos mediante un túnel **GRE (Generic Routing Encapsulation)** protegido por un túnel **IPsec** en modo transporte/túnel, garantizando confidencialidad e integridad de los datos.
+Este repositorio contiene un escenario avanzado de redes diseñado en **Containerlab**. Se implementa un túnel **GRE** protegido por **IPsec (VTI-based)** para interconectar dos sitios remotos (R1 y R7) a través de una infraestructura con múltiples Sistemas Autónomos.
 
-## 🌐 Topología del Laboratorio
-La arquitectura conecta múltiples Sistemas Autónomos (AS) utilizando BGP y OSPF, con una infraestructura central que simula el transporte seguro.
+## 🌐 Topología y Arquitectura
+El laboratorio utiliza una combinación de protocolos de enrutamiento para simular un entorno de ISP real:
+* **Core:** BGP y OSPF para el transporte.
+* **Overlay:** Túnel GRE con EIGRP 500 para el intercambio de prefijos internos LAN.
 
 ![Topología de Red](topología.png)
 
-## 🛠 Tecnologías Utilizadas
-* **Orquestación:** [Containerlab](https://containerlab.dev/) & Docker.
-* **Enrutamiento:** Cisco IOL.
-* **Protocolos de Enrutamiento:** BGP (ASN 400, 500, 600), OSPF, EIGRP.
-* **Seguridad:** IPsec (Encapsulating Security Payload - ESP).
-* **Túneles:** GRE para transporte multiprotocolo.
+## 🛠 Detalles de Configuración (Security Stack)
+La seguridad del túnel se basa en un perfil de protección IPsec con los siguientes parámetros técnicos:
+
+* **IKEv1 (ISAKMP) Policy 10:** AES-256, SHA-256, Group 14 (DH).
+* **IPsec Transform-Set:** `esp-aes 256` y `esp-sha256-hmac`.
+* **MTU Tuning:** Ajuste de `ip mtu 1400` en la interfaz `tunnel 1` para evitar fragmentación debido al overhead de GRE e IPsec.
 
 ---
 
-## 🔍 Validación Técnica
+## 🔍 Validación y Evidencias Técnicas
 
-### 1. Cifrado de Tráfico (Wireshark)
-Para validar la seguridad, se realizó una captura en la interfaz de transporte. Se confirma que el tráfico GRE está encapsulado bajo el protocolo **ESP (IP Protocol 50)**, haciendo que los datos internos sean ilegibles para actores no autorizados en la red de transporte.
+### 1. Análisis de Tráfico Encapsulado (Wireshark)
+
+En la captura adjunta, se valida el funcionamiento del protocolo **ESP (IP Protocol 50)**. 
 
 ![Captura de Wireshark - ESP](Captura_de_Wireshark_ESP.png)
 
-*En la imagen se observa el intercambio de paquetes con SPI específicos, confirmando el túnel IPsec activo.*
+**Análisis técnico:** * Se observa el campo **SPI (Security Parameters Index)**. Este valor es crítico ya que permite a los routers R1 y R7 identificar la asociación de seguridad (SA) correcta para procesar el tráfico cifrado. 
+* El tráfico original (ICMP/EIGRP) es totalmente invisible, confirmando que la seguridad `esp-aes 256` está operativa.
 
-### 2. Verificación del Túnel (MTR/Traceroute)
-Se ejecutó un `mtr` desde **PC2 (192.168.0.100)** hacia **PC1 (192.168.20.100)**. La traza muestra un salto lógico directo a través de la IP del túnel (**12.12.12.1**), ocultando la complejidad de la red física subyacente.
+### 2. Verificación de Salto Lógico (MTR)
+A pesar de que los paquetes atraviesan físicamente varios routers del core, el comando `mtr` desde **PC2** hacia **PC1** muestra una conectividad de "un solo salto" a través de la IP de túnel `12.12.12.1`.
 
-* **Resultado del MTR:**
-    1. `192.168.0.1` (Gateway local)
-    2. `12.12.12.1` (Extremo remoto del Túnel GRE)
-    3. `192.168.20.100` (Destino final)
+* **Traza lógica:**
+    1. `192.168.0.1` -> Gateway (R7)
+    2. `12.12.12.1` -> Punto a punto del Túnel GRE (R1)
+    3. `192.168.20.100` -> Destino Final
 
 ---
 
-## 🚀 Cómo desplegar este laboratorio
+## 🚀 Despliegue
+1. Clonar el repositorio.
+2. Ejecutar: `sudo containerlab deploy -t LAB_TUNEL_GRE.clab.yml`
+3. Los archivos de configuración parcial (`.partial`) contienen el stack completo de `crypto isakmp` y `crypto ipsec` utilizado en esta topología.
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/Jhon1176/Lab_Tunel_GRE.git](https://github.com/Jhon1176/Lab_Tunel_GRE.git)
-   cd Lab_Tunel_GRE
+---
+**Autor:** Jhon Colcha - Estudiante de Ingeniería en Telemática (ESPOCH).
