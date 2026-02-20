@@ -9,7 +9,7 @@ La arquitectura conecta múltiples Sistemas Autónomos (AS) utilizando BGP y OSP
 
 ## 🛠 Tecnologías Utilizadas
 * **Orquestación:** [Containerlab](https://containerlab.dev/) & Docker.
-* **Enrutamiento:** Cisco IOL / VyOS.
+* **Enrutamiento:** Cisco IOL.
 * **Protocolos de Enrutamiento:** BGP (ASN 400, 500, 600), OSPF, EIGRP.
 * **Seguridad:** IPsec (Encapsulating Security Payload - ESP).
 * **Túneles:** GRE para transporte multiprotocolo.
@@ -22,6 +22,7 @@ La arquitectura conecta múltiples Sistemas Autónomos (AS) utilizando BGP y OSP
 Para validar la seguridad, se realizó una captura en la interfaz de transporte. Se confirma que el tráfico GRE está encapsulado bajo el protocolo **ESP (IP Protocol 50)**, haciendo que los datos internos sean ilegibles para actores no autorizados en la red de transporte.
 
 ![Captura de Wireshark - ESP](Captura_de_Wireshark_ESP.png)
+
 *En la imagen se observa el intercambio de paquetes con SPI específicos, confirmando el túnel IPsec activo.*
 
 ### 2. Verificación del Túnel (MTR/Traceroute)
