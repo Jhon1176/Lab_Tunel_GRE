@@ -7,7 +7,7 @@ El laboratorio utiliza una combinación de protocolos de enrutamiento para simul
 * **Core:** BGP y OSPF para el transporte.
 * **Overlay:** Túnel GRE con EIGRP 500 para el intercambio de prefijos internos LAN.
 
-![Topología de Red](topología.png)
+![Topología de Red](Topología_de_Red.png)
 
 ## 🛠 Detalles de Configuración (Security Stack)
 La seguridad del túnel se basa en un perfil de protección IPsec con los siguientes parámetros técnicos:
